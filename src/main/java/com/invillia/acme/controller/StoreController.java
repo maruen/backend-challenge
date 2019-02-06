@@ -91,7 +91,7 @@ public class StoreController {
         return responseEntity;
     }
 
-    @GetMapping(path = "/api/store/{store-id}")
+    @GetMapping(path = "/api/storeById/{store-id}")
     public ResponseEntity<Store> getStoreById(@PathVariable(name = "store-id", required = true) Long storeId) {
         
         Optional<Store> store = storeService.findById(storeId);
@@ -100,6 +100,20 @@ public class StoreController {
         }
         return ResponseEntity.notFound().build();
     }
+    
+    
+    @GetMapping(path = "/api/storeByName/{store-name}")
+    public ResponseEntity<Store> getStoreByName(@PathVariable(name = "store-name", required = true) String name) {
+        
+        name = name.replaceAll("\\s+", " ").toUpperCase();
+        
+        Optional<Store> store = storeService.findByName(name);
+        if (store.isPresent()) {
+            return ResponseEntity.ok(store.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
+    
     
     
     @PatchMapping(path= "/api/store/{store-id}")
