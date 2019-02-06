@@ -91,7 +91,7 @@ public class StoreController {
         return responseEntity;
     }
 
-    @GetMapping(path = "/api/storeById/{store-id}")
+    @GetMapping(path = "/api/store/getById/{store-id}")
     public ResponseEntity<Store> getStoreById(@PathVariable(name = "store-id", required = true) Long storeId) {
         
         Optional<Store> store = storeService.findById(storeId);
@@ -102,7 +102,7 @@ public class StoreController {
     }
     
     
-    @GetMapping(path = "/api/storeByName/{store-name}")
+    @GetMapping(path = "/api/store/getByName/{store-name}")
     public ResponseEntity<Store> getStoreByName(@PathVariable(name = "store-name", required = true) String name) {
         
         name = name.replaceAll("\\s+", " ").toUpperCase();
