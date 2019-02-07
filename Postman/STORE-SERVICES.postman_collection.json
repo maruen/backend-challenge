@@ -1,0 +1,140 @@
+{
+	"info": {
+		"_postman_id": "d161e1d3-bdf0-4c55-8dae-a29a754965e6",
+		"name": "STORE-SERVICES",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getStoreById",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/store/getById/{{store-id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"store",
+						"getById",
+						"{{store-id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getStoreByName",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/store/getByName/{{store-name}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"store",
+						"getByName",
+						"{{store-name}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateStore",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n\t\"name\"    : \"AMAZON STORE\",\n\t\"address\" : \"R. MAESTRO CARDIM, 1061\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/store/{{store-id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"store",
+						"{{store-id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "saveStore",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\"\t\t: \"AMAZON STORE\",\n\t\"address\"\t: \"R. MAESTRO CARDIM, 1060\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/store",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"store"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

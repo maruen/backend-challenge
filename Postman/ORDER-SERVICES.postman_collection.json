@@ -1,0 +1,40 @@
+{
+	"info": {
+		"_postman_id": "8b5c2ad9-94d3-4eda-a59c-77ee2ee4b921",
+		"name": "ORDER-SERVICES",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "saveOrder",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"storeId\" \t\t\t\t:  2,\n\t\"address\"\t\t\t\t:  \"AV PAULISTA, 3000\"\t\t,\n\t\"confirmationDate\"\t\t:  \"2019-02-06T19:25:21\"\t, \n\t\"status\"\t\t\t\t:  \"PENDING\",\n\t\"items\" \t\t\t\t:\t[\n\t\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\t\"description\" : \"Joseph's History Book\",\n\t\t\t\t\t\t\t\t\t\t\"unitPrice\"\t  : \"29.99\",\n\t\t\t\t\t\t\t\t\t\t\"quantity\"    : \"1\"\n\t\t\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\t\t\t\"description\" : \"John's History Book\",\n\t\t\t\t\t\t\t\t\t\t\"unitPrice\"\t  : \"39.99\",\n\t\t\t\t\t\t\t\t\t\t\"quantity\"    : \"1\"\n\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/order",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"order"
+					]
+				},
+				"description": "issueBookToMember"
+			},
+			"response": []
+		}
+	]
+}
