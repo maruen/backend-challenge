@@ -66,8 +66,6 @@ public class StoreController {
             return status(FORBIDDEN).build();
         }
         
-        
-        
         Optional<String> address =  Optional.ofNullable(store.getAddress());
         
         if (!address.isPresent()) {

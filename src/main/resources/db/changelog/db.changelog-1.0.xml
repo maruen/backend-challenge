@@ -39,13 +39,23 @@
                <constraints primaryKey       =  "true"
                             primaryKeyName   =  "acme_order_pk"/>
             </column>
-        
+            
+            <column name    =   "store_id"          type    =   "BIGINT        "/>
             <column name    =   "address"           type    =   "VARCHAR(255)  "/>
             <column name    =   "confirmation_date" type    =   "DATETIME      "/>
             <column name    =   "status"            type    =   "VARCHAR(255)  "/>
             
         </createTable>
         
+        <addForeignKeyConstraint 
+            baseColumnNames         =   "store_id"
+            baseTableName           =   "acme_order"
+            constraintName          =   "acme_order_store_id_fk"
+            onDelete                =   "CASCADE"
+            onUpdate                =   "RESTRICT"
+            referencedColumnNames   =   "id"
+            referencedTableName     =   "acme_store"
+        />
         
         <!-- ************** ORDER ITEM TABLE DECLARATION BEGINING  ************** -->
         
