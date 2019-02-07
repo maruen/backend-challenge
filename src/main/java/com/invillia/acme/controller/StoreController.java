@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.invillia.acme.dto.StoreDTO;
 import com.invillia.acme.model.Store;
 import com.invillia.acme.services.StoreService;
 import com.invillia.acme.utils.ValidationUtils;
@@ -45,9 +46,11 @@ public class StoreController {
     }
 
     @PostMapping(path = "/api/store")
-    public ResponseEntity<Store> saveStore(@RequestBody Store store) {
+    public ResponseEntity<Store> saveStore(@RequestBody StoreDTO storeDTO) {
         
-        Optional<String> name =  Optional.ofNullable(store.getName());
+        Store newStore = new Store();
+        
+        Optional<String> name =  Optional.ofNullable(storeDTO.getName());
         
         if (!name.isPresent()) {
             return status(BAD_REQUEST).build();
@@ -57,16 +60,11 @@ public class StoreController {
                 return status(BAD_REQUEST).build();
             }
          
-            String nameWithProperSpacing = store.getName().replaceAll("\\s+", " ");
-            store.setName(nameWithProperSpacing.trim());
+            String nameWithProperSpacing = storeDTO.getName().replaceAll("\\s+", " ");
+            newStore.setName(nameWithProperSpacing.trim().toUpperCase());
         }
         
-        Optional<Store> storeAlreadyExists = storeService.findByName(store.getName());
-        if (storeAlreadyExists.isPresent()) {
-            return status(FORBIDDEN).build();
-        }
-        
-        Optional<String> address =  Optional.ofNullable(store.getAddress());
+        Optional<String> address =  Optional.ofNullable(storeDTO.getAddress());
         
         if (!address.isPresent()) {
             return status(BAD_REQUEST).build();
@@ -76,16 +74,18 @@ public class StoreController {
                 return status(BAD_REQUEST).build();
             }
          
-            String addressWithProperSpacing = store.getName().replaceAll("\\s+", " ");
-            store.setName(addressWithProperSpacing.trim());
+            String addressWithProperSpacing = storeDTO.getAddress().replaceAll("\\s+", " ");
+            newStore.setAddress(addressWithProperSpacing.trim().toUpperCase());
         }
         
-        store.setName(store.getName().toUpperCase());
-        store.setAddress(store.getAddress().toUpperCase());
+        Optional<Store> storeAlreadyExists = storeService.findByName(storeDTO.getName());
+        if (storeAlreadyExists.isPresent()) {
+            return status(FORBIDDEN).build();
+        }
         
-        storeService.save(store);
+        storeService.save(newStore);
         
-        ResponseEntity<Store> responseEntity = new ResponseEntity<Store>(store,CREATED);
+        ResponseEntity<Store> responseEntity = new ResponseEntity<Store>(newStore,CREATED);
         return responseEntity;
     }
 
@@ -115,8 +115,8 @@ public class StoreController {
     
     
     @PatchMapping(path= "/api/store/{store-id}")
-    public ResponseEntity<Store> updateStore(@PathVariable(name="store-id")   Long    storeId,
-                                             @RequestBody                     Store   store){
+    public ResponseEntity<Store> updateStore(@PathVariable(name="store-id")   Long       storeId,
+                                             @RequestBody                     StoreDTO   storeDTO){
       
         Store currentStore = null;
         try {
@@ -126,7 +126,7 @@ public class StoreController {
         }
         
         
-        Optional<String> newName =  Optional.ofNullable(store.getName());
+        Optional<String> newName =  Optional.ofNullable(storeDTO.getName());
         if (newName.isPresent()) {
             
             if (!ValidationUtils.validateName(newName.get())) {
@@ -145,7 +145,7 @@ public class StoreController {
             currentStore.setName(newNameWithProperSpacing.toUpperCase());
         }
         
-        Optional<String> newAddress =  Optional.ofNullable(store.getAddress());
+        Optional<String> newAddress =  Optional.ofNullable(storeDTO.getAddress());
         if (newAddress.isPresent()) {
             
             if (!ValidationUtils.validateAddress(newAddress.get())) {

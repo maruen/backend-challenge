@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -46,7 +47,7 @@ public class Order implements Serializable {
     @JoinColumn(name = "store_id", referencedColumnName = "id")
     Store store;
     
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     List<OrderItem> items;
 
@@ -109,8 +110,4 @@ public class Order implements Serializable {
                 items);
     }
     
-    
-
-   
-
 }

@@ -11,7 +11,8 @@ public class StoreDTO {
     }
 
     public String  name;
-    public Long    id;
+    public String  address;
+    
 
     public String getName() {
         return name;
@@ -21,20 +22,18 @@ public class StoreDTO {
         this.name = name;
     }
 
-    public Long getId() {
-        return id;
+    public String getAddress() {
+        return address;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     @Override
     public String toString() {
-        return String.format("StoreDTO [name=%s, id=%s]", name, id);
+        return String.format("StoreDTO [name=%s, address=%s]", name, address);
     }
-    
-    
 
   
 }

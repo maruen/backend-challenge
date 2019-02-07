@@ -14,18 +14,18 @@ public class OrderDTO {
     
     public OrderDTO() {}
 
-    public StoreDTO             store;
+    public Long                 storeId;
     public String               address;
     public LocalDateTime        confirmationDate;
     public OrderStatus          status;
     public Long                 orderId;
     public List<OrderItemDTO>   items;
    
-    public StoreDTO getStore() {
-        return store;
+    public Long getStoreId() {
+        return storeId;
     }
-    public void setStore(StoreDTO store) {
-        this.store = store;
+    public void setStoreId(Long storeId) {
+        this.storeId = storeId;
     }
     public String getAddress() {
         return address;
@@ -59,8 +59,8 @@ public class OrderDTO {
     }
     @Override
     public String toString() {
-        return String.format("OrderDTO [store=%s, address=%s, confirmationDate=%s, status=%s, orderId=%s, items=%s]",
-                store,
+        return String.format("OrderDTO [storeId=%s, address=%s, confirmationDate=%s, status=%s, orderId=%s, items=%s]",
+                storeId,
                 address,
                 confirmationDate,
                 status,
