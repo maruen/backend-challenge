@@ -3,7 +3,7 @@
  */
 package com.invillia.acme.controller;
 
-import static com.invillia.acme.utils.ResponseUtils.getErrorResponse;
+import static com.invillia.acme.utils.ResponseUtils.getResponse;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -36,7 +36,6 @@ import com.invillia.acme.dto.ErrorDTO;
 import com.invillia.acme.dto.StoreDTO;
 import com.invillia.acme.model.Store;
 import com.invillia.acme.services.StoreService;
-import com.invillia.acme.utils.ResponseUtils;
 import com.invillia.acme.utils.ValidationUtils;
 
 import io.swagger.annotations.Api;
@@ -125,7 +124,7 @@ public class StoreController {
         } else {
             
             if (!ValidationUtils.validateName(name.get())) {
-                return getErrorResponse("Invalid Name");
+                return getResponse("Invalid Name", BAD_REQUEST);
             }
          
             String nameWithProperSpacing = storeDTO.getName().replaceAll("\\s+", " ");
@@ -139,7 +138,7 @@ public class StoreController {
         } else {
             
             if (!ValidationUtils.validateAddress(address.get())) {
-                return getErrorResponse("Invalid Address");
+                return getResponse("Invalid Address", BAD_REQUEST);
             }
          
             String addressWithProperSpacing = storeDTO.getAddress().replaceAll("\\s+", " ");
@@ -148,7 +147,7 @@ public class StoreController {
         
         Optional<Store> storeAlreadyExists = storeService.findByName(storeDTO.getName());
         if (storeAlreadyExists.isPresent()) {
-            return getErrorResponse("Store not allowed to be saved");
+            return getResponse("Store not allowed to be saved", FORBIDDEN);
         }
         
         storeService.save(newStore);

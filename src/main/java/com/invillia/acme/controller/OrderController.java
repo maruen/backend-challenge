@@ -4,13 +4,13 @@
 package com.invillia.acme.controller;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.ResponseEntity.status;
 
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -80,7 +80,9 @@ public class OrderController {
        
         }
         
-        return status(HttpStatus.CREATED).build();
+        ResponseEntity<Order> responseEntity = new ResponseEntity<Order>(order,CREATED);
+        return responseEntity;
+        
     }
 
    
