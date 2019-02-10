@@ -1,4 +1,4 @@
-package com.invillia.acme.dto;
+package com.invillia.acme.dto.input;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,16 +10,16 @@ import com.invillia.acme.enums.OrderStatus;
  *
  */
 
-public class OrderDTO {
+public class OrderInputDTO {
     
-    public OrderDTO() {}
+    public OrderInputDTO() {}
 
-    public Long                 storeId;
-    public String               address;
-    public LocalDateTime        confirmationDate;
-    public OrderStatus          status;
-    public Long                 orderId;
-    public List<OrderItemDTO>   items;
+    public Long                      storeId;
+    public String                    address;
+    public LocalDateTime             confirmationDate;
+    public OrderStatus               status;
+    public Long                      orderId;
+    public List<OrderItemInputDTO>   items;
    
     public Long getStoreId() {
         return storeId;
@@ -51,15 +51,15 @@ public class OrderDTO {
     public void setOrderId(Long orderId) {
         this.orderId = orderId;
     }
-    public List<OrderItemDTO> getItems() {
+    public List<OrderItemInputDTO> getItems() {
         return items;
     }
-    public void setItems(List<OrderItemDTO> items) {
+    public void setItems(List<OrderItemInputDTO> items) {
         this.items = items;
     }
     @Override
     public String toString() {
-        return String.format("OrderDTO [storeId=%s, address=%s, confirmationDate=%s, status=%s, orderId=%s, items=%s]",
+        return String.format("OrderInputDTO [storeId=%s, address=%s, confirmationDate=%s, status=%s, orderId=%s, items=%s]",
                 storeId,
                 address,
                 confirmationDate,

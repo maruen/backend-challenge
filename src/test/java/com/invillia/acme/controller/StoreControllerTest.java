@@ -2,6 +2,7 @@ package com.invillia.acme.controller;
 
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -27,6 +28,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.invillia.acme.dto.input.StoreInputDTO;
+import com.invillia.acme.dto.output.StoreOutputDTO;
 import com.invillia.acme.model.Store;
 import com.invillia.acme.repositories.StoreRepository;
 
@@ -35,20 +38,6 @@ import com.invillia.acme.repositories.StoreRepository;
 public class StoreControllerTest {
     
     MockMvc mockMvc;
-    
-    
-    String INSERT_STORE_MESSAGE_PATTERN        =      "{"                               +
-                                                      "    \"name\"      : \"%s\","     +
-                                                      "    \"address\"   : \"%s\""      + 
-                                                      "}";
-    
-    
-    String UPDATE_STORE_MESSAGE_PATTERN        =      "{"                               +
-                                                      "    \"name\"      : \"%s\","     +
-                                                      "    \"address\"   : \"%s\""      + 
-                                                      "}";
-
-    
     
     
     /** USER1 DATA **/
@@ -65,12 +54,8 @@ public class StoreControllerTest {
     static final String INVALID_ADDRESS          = "!@#$%";
    
     
-    @Autowired
-    StoreRepository storeRepository;
-    
-    
-    @Mock
-    private StoreController storeController;
+    @Autowired  private StoreRepository storeRepository;
+    @Mock       private StoreController storeController;
     
     @Autowired
     private TestRestTemplate template;
@@ -85,38 +70,35 @@ public class StoreControllerTest {
     public void testSucessfullSaveStore() {
 
 
-        ResponseEntity<Store> response = null;
+        ResponseEntity<StoreOutputDTO> response1 = null;
 
         try {
+            
+            StoreInputDTO storeInputDTO1 = new StoreInputDTO();
+            storeInputDTO1.setName(USER1_NAME);
+            storeInputDTO1.setAddress(USER1_ADDRESS);
+            
 
+            HttpEntity<Object> entityToPost = getHttpEntity(storeInputDTO1);
+            response1 = template.postForEntity("/api/store", entityToPost, StoreOutputDTO.class);
 
-            HttpEntity<Object> store = getHttpEntity(format(INSERT_STORE_MESSAGE_PATTERN, 
-                    USER1_NAME,
-                    USER1_ADDRESS));
-
-            response = template.postForEntity("/api/store", store, Store.class);
-
-            if (response.getStatusCode().equals(FORBIDDEN)) {
+            if (response1.getStatusCode().equals(FORBIDDEN)) {
 
                 Optional<Store> existingStore = storeRepository.findByName(USER1_NAME);
-
                 if (existingStore.isPresent()) {
                     storeRepository.deleteById(existingStore.get().getId());
                 }
-                response = template.postForEntity("/api/store", store, Store.class);
+                response1 = template.postForEntity("/api/store", entityToPost, StoreOutputDTO.class);
             }
 
-            assertEquals(CREATED    , response.getStatusCode());
-            assertEquals(USER1_NAME , response.getBody().getName());
+            assertEquals(CREATED , response1.getStatusCode());
+            assertNotNull(response1.getBody().getId());
 
 
         } catch (Exception e) {
-
             fail(e.getMessage());
-
         } finally  {
-            // cleanup the store
-            storeRepository.deleteById(response.getBody().getId());
+            storeRepository.deleteById(response1.getBody().getId());
         }
     }
     
@@ -126,10 +108,10 @@ public class StoreControllerTest {
     public void testUnsuccessfullSaveStore() {
 
 
-        ResponseEntity<Store> response1 = null;
-        ResponseEntity<Store> response2 = null;
-        ResponseEntity<Store> response3 = null;
-        ResponseEntity<Store> response4 = null;
+        ResponseEntity<StoreOutputDTO> response1 = null;
+        ResponseEntity<StoreOutputDTO> response2 = null;
+        ResponseEntity<StoreOutputDTO> response3 = null;
+        ResponseEntity<StoreOutputDTO> response4 = null;
 
         try {
 
@@ -139,24 +121,16 @@ public class StoreControllerTest {
              * 
              */
             
-            HttpEntity<Object> store = getHttpEntity(format(INSERT_STORE_MESSAGE_PATTERN, 
-                    USER1_NAME,
-                    USER1_ADDRESS));
+            StoreInputDTO storeInputDTO1 = new StoreInputDTO();
+            storeInputDTO1.setName(USER1_NAME);
+            storeInputDTO1.setAddress(USER1_ADDRESS);
+            
 
-            response1 = template.postForEntity("/api/store", store, Store.class);
+            HttpEntity<Object> entityToPost = getHttpEntity(storeInputDTO1);
+            response1 = template.postForEntity("/api/store", entityToPost, StoreOutputDTO.class);
 
-            if (response1.getStatusCode().equals(FORBIDDEN)) {
-
-                Optional<Store> existingStore = storeRepository.findByName(USER1_NAME);
-
-                if (existingStore.isPresent()) {
-                    storeRepository.deleteById(existingStore.get().getId());
-                }
-                response1 = template.postForEntity("/api/store", store, Store.class);
-            }
-
-            assertEquals(CREATED    , response1.getStatusCode());
-            assertEquals(USER1_NAME , response1.getBody().getName());
+            assertEquals(CREATED  , response1.getStatusCode());
+            assertNotNull(response1.getBody().getId());
             
             /**
              * 
@@ -164,9 +138,8 @@ public class StoreControllerTest {
              * 
              */
             
-            response2 = template.postForEntity("/api/store", store, Store.class);
+            response2 = template.postForEntity("/api/store", storeInputDTO1, StoreOutputDTO.class);
             assertEquals(FORBIDDEN ,response2.getStatusCode());
-            
             
             /**
              * 
@@ -174,13 +147,14 @@ public class StoreControllerTest {
              * 
              */
             
-            store = getHttpEntity(format(INSERT_STORE_MESSAGE_PATTERN, 
-                                         INVALID_NAME,
-                                         USER1_ADDRESS));
-
-            response3 = template.postForEntity("/api/store", store, Store.class);
-            assertEquals(BAD_REQUEST ,response3.getStatusCode());
+            StoreInputDTO storeInputDTO2 = new StoreInputDTO();
+            storeInputDTO2.setName(INVALID_NAME);
+            storeInputDTO2.setAddress(USER1_ADDRESS);
+         
+            entityToPost = getHttpEntity(storeInputDTO2);
+            response3 = template.postForEntity("/api/store", entityToPost, StoreOutputDTO.class);
             
+            assertEquals(BAD_REQUEST ,response3.getStatusCode());
             
             
             /**
@@ -188,13 +162,15 @@ public class StoreControllerTest {
              * 
              */
             
-            store = getHttpEntity(format(INSERT_STORE_MESSAGE_PATTERN, 
-                                         USER1_NAME,
-                                         INVALID_ADDRESS));
-
-            response4 = template.postForEntity("/api/store", store, Store.class);
+            StoreInputDTO storeInputDTO3 = new StoreInputDTO();
+            storeInputDTO3.setName(USER1_NAME);
+            storeInputDTO3.setAddress(INVALID_ADDRESS);
+         
+            entityToPost = getHttpEntity(storeInputDTO3);
+            response4 = template.postForEntity("/api/store", entityToPost, StoreOutputDTO.class);
+            
             assertEquals(BAD_REQUEST ,response4.getStatusCode());
-    
+       
 
         } catch (Exception e) {
 
@@ -212,8 +188,8 @@ public class StoreControllerTest {
     public void testGetStoreById() {
 
        
-        ResponseEntity<Store> response1 = null;
-        ResponseEntity<Store> response2 = null;
+        ResponseEntity<StoreOutputDTO> response1 = null;
+        ResponseEntity<StoreOutputDTO> response2 = null;
         
         try {
             
@@ -223,24 +199,16 @@ public class StoreControllerTest {
              * 
              */
             
-            HttpEntity<Object> store = getHttpEntity(format(INSERT_STORE_MESSAGE_PATTERN, 
-                    USER1_NAME,
-                    USER1_ADDRESS));
+            StoreInputDTO storeDTO1 = new StoreInputDTO();
+            storeDTO1.setName(USER1_NAME);
+            storeDTO1.setAddress(USER1_ADDRESS);
+            
 
-            response1 = template.postForEntity("/api/store", store, Store.class);
+            HttpEntity<Object> entityToPost = getHttpEntity(storeDTO1);
+            response1 = template.postForEntity("/api/store", entityToPost, StoreOutputDTO.class);
 
-            if (response1.getStatusCode().equals(FORBIDDEN)) {
-
-                Optional<Store> existingStore = storeRepository.findByName(USER1_NAME);
-
-                if (existingStore.isPresent()) {
-                    storeRepository.deleteById(existingStore.get().getId());
-                }
-                response1 = template.postForEntity("/api/store", store, Store.class);
-            }
-
-            assertEquals(CREATED    , response1.getStatusCode());
-            assertEquals(USER1_NAME , response1.getBody().getName());
+            assertEquals(CREATED  , response1.getStatusCode());
+            assertNotNull(response1.getBody().getId());
     
             /**
              * 
@@ -249,7 +217,8 @@ public class StoreControllerTest {
              */
     
            response2 = template.getForEntity(format("/api/store/getById/%s", 
-                   response1.getBody().getId()), Store.class);
+                   response1.getBody().getId()),
+                   StoreOutputDTO.class);
             
             Assert.assertEquals(OK                           , response2.getStatusCode());
             Assert.assertEquals(USER1_NAME                   , response2.getBody().getName());
@@ -273,8 +242,8 @@ public class StoreControllerTest {
     public void testGetStoreByName() {
 
        
-        ResponseEntity<Store> response1 = null;
-        ResponseEntity<Store> response2 = null;
+        ResponseEntity<StoreOutputDTO> response1 = null;
+        ResponseEntity<StoreOutputDTO> response2 = null;
         
         try {
             
@@ -284,24 +253,16 @@ public class StoreControllerTest {
              * 
              */
             
-            HttpEntity<Object> store = getHttpEntity(format(INSERT_STORE_MESSAGE_PATTERN, 
-                    USER1_NAME,
-                    USER1_ADDRESS));
+            StoreInputDTO storeDTO1 = new StoreInputDTO();
+            storeDTO1.setName(USER1_NAME);
+            storeDTO1.setAddress(USER1_ADDRESS);
+            
 
-            response1 = template.postForEntity("/api/store", store, Store.class);
+            HttpEntity<Object> entityToPost = getHttpEntity(storeDTO1);
+            response1 = template.postForEntity("/api/store", entityToPost, StoreOutputDTO.class);
 
-            if (response1.getStatusCode().equals(FORBIDDEN)) {
-
-                Optional<Store> existingStore = storeRepository.findByName(USER1_NAME);
-
-                if (existingStore.isPresent()) {
-                    storeRepository.deleteById(existingStore.get().getId());
-                }
-                response1 = template.postForEntity("/api/store", store, Store.class);
-            }
-
-            assertEquals(CREATED    , response1.getStatusCode());
-            assertEquals(USER1_NAME , response1.getBody().getName());
+            assertEquals(CREATED  , response1.getStatusCode());
+            assertNotNull(response1.getBody().getId());
     
             /**
              * 
@@ -310,7 +271,7 @@ public class StoreControllerTest {
              */
     
            response2 = template.getForEntity(format("/api/store/getByName/%s", 
-                   response1.getBody().getName()), Store.class);
+                   response1.getBody().getName()), StoreOutputDTO.class);
             
             Assert.assertEquals(OK          , response2.getStatusCode());
             Assert.assertEquals(USER1_NAME  , response2.getBody().getName());
@@ -333,7 +294,7 @@ public class StoreControllerTest {
     public void testSucessfullUpdateStore() {
 
 
-        ResponseEntity<Store> response1 = null;
+        ResponseEntity<StoreOutputDTO> response1 = null;
         
         try {
 
@@ -343,41 +304,31 @@ public class StoreControllerTest {
              * 
              */
             
-            HttpEntity<Object> store = getHttpEntity(format(INSERT_STORE_MESSAGE_PATTERN, 
-                    USER1_NAME,
-                    USER1_ADDRESS));
+            StoreInputDTO storeDTO1 = new StoreInputDTO();
+            storeDTO1.setName(USER1_NAME);
+            storeDTO1.setAddress(USER1_ADDRESS);
+            
 
-            response1 = template.postForEntity("/api/store", store, Store.class);
+            HttpEntity<Object> entityToPost = getHttpEntity(storeDTO1);
+            response1 = template.postForEntity("/api/store", entityToPost, StoreOutputDTO.class);
 
-            if (response1.getStatusCode().equals(FORBIDDEN)) {
-
-                Optional<Store> existingStore = storeRepository.findByName(USER1_NAME);
-
-                if (existingStore.isPresent()) {
-                    storeRepository.deleteById(existingStore.get().getId());
-                }
-                response1 = template.postForEntity("/api/store", store, Store.class);
-            }
-
-            assertEquals(CREATED    , response1.getStatusCode());
-            assertEquals(USER1_NAME , response1.getBody().getName());
+            assertEquals(CREATED  , response1.getStatusCode());
+            assertNotNull(response1.getBody().getId());
             
             /**
              * 
              *  UPDATE STORE 
              * 
-             
             
-            HttpEntity<Object> storeUpdated = getHttpEntity(format(UPDATE_STORE_MESSAGE_PATTERN, 
-                    USER1_NAME,
-                    USER2_ADDRESS));
-            
+            //TODO
+              
+            storeDTO1.setName("XXXX");
+            storeDTO1.setAddress("YYYYYY");
            
             Store result = template.patchForObject(format("/api/store/%s",
                     String.valueOf(response1.getBody().getId())),
-                    storeUpdated,
-                    Store.class);
-            
+                    entityToPost,
+                    StoreOutputDTO.class);
             
             assertEquals(USER1_NAME ,result.getName());
             assertEquals(USER2_NAME ,result.getAddress());
@@ -393,13 +344,6 @@ public class StoreControllerTest {
             storeRepository.deleteById(response1.getBody().getId());
         }
     }
-    
-    
-    
-    
-    
-    
-    
     
     
 

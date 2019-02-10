@@ -1,13 +1,13 @@
-package com.invillia.acme.dto;
+package com.invillia.acme.dto.input;
 
 /**
  * @author Maruen Mehana <maruen@gmail.com>
  *
  */
 
-public class OrderItemDTO {
+public class OrderItemInputDTO {
     
-    public OrderItemDTO() {}
+    public OrderItemInputDTO() {}
 
     public String  description;
     public Float   unitPrice;
@@ -33,7 +33,7 @@ public class OrderItemDTO {
     }
     @Override
     public String toString() {
-        return String.format("OrderItemDTO [description=%s, unitPrice=%s, quantity=%s]",
+        return String.format("OrderItemInputDTO [description=%s, unitPrice=%s, quantity=%s]",
                 description,
                 unitPrice,
                 quantity);

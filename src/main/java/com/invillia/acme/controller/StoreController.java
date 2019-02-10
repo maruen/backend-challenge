@@ -4,6 +4,9 @@
 package com.invillia.acme.controller;
 
 import static com.invillia.acme.utils.ResponseUtils.getResponse;
+import static com.invillia.acme.utils.ValidationUtils.validateAddress;
+import static com.invillia.acme.utils.ValidationUtils.validateName;
+import static java.util.Optional.ofNullable;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -32,8 +35,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.invillia.acme.dto.ErrorDTO;
-import com.invillia.acme.dto.StoreDTO;
+import com.invillia.acme.dto.input.StoreInputDTO;
+import com.invillia.acme.dto.output.DefaultOutputDTO;
+import com.invillia.acme.dto.output.ErrorDTO;
+import com.invillia.acme.dto.output.StoreOutputDTO;
 import com.invillia.acme.model.Store;
 import com.invillia.acme.services.StoreService;
 import com.invillia.acme.utils.ValidationUtils;
@@ -94,7 +99,7 @@ public class StoreController {
     @Consumes({ APPLICATION_JSON })
     
     @ApiOperation(  notes         = "Save store",
-                    response      = Store.class,
+                    response      = DefaultOutputDTO.class,
                     produces      = APPLICATION_JSON,
                     value         = EMPTY)
    
@@ -102,57 +107,59 @@ public class StoreController {
             value = {
           @ApiResponse(code       = 201,
                        message    = "Store successfully saved",
-                       response   = Store.class),
+                       response   = DefaultOutputDTO.class),
                               
           @ApiResponse(code       = 403,
                        message    = "Store already saved",
                        response   = ErrorDTO.class) 
-                    
-                            })
+                    })
     /** END SWAGGER ANNOTATIONS **/
     
     
     @PostMapping(path = "/api/store")
-    public ResponseEntity<Object> saveStore(@RequestBody StoreDTO storeDTO) {
+    public ResponseEntity<Object> saveStore(@RequestBody StoreInputDTO storeInputDTO) {
         
-        Store newStore = new Store();
-        
-        Optional<String> name =  Optional.ofNullable(storeDTO.getName());
+        Store            newStore   =  new Store();
+        Optional<String> name       =  ofNullable(storeInputDTO.getName());
         
         if (!name.isPresent()) {
             return status(BAD_REQUEST).build();
         } else {
             
-            if (!ValidationUtils.validateName(name.get())) {
+            if (!validateName(name.get())) {
                 return getResponse("Invalid Name", BAD_REQUEST);
             }
          
-            String nameWithProperSpacing = storeDTO.getName().replaceAll("\\s+", " ");
+            String nameWithProperSpacing = storeInputDTO.getName().replaceAll("\\s+", " ");
             newStore.setName(nameWithProperSpacing.trim().toUpperCase());
         }
         
-        Optional<String> address =  Optional.ofNullable(storeDTO.getAddress());
+        Optional<String> address = ofNullable(storeInputDTO.getAddress());
         
         if (!address.isPresent()) {
             return status(BAD_REQUEST).build();
         } else {
             
-            if (!ValidationUtils.validateAddress(address.get())) {
+            if (!validateAddress(address.get())) {
                 return getResponse("Invalid Address", BAD_REQUEST);
             }
          
-            String addressWithProperSpacing = storeDTO.getAddress().replaceAll("\\s+", " ");
+            String addressWithProperSpacing = storeInputDTO.getAddress().replaceAll("\\s+", " ");
             newStore.setAddress(addressWithProperSpacing.trim().toUpperCase());
         }
         
-        Optional<Store> storeAlreadyExists = storeService.findByName(storeDTO.getName());
+        Optional<Store> storeAlreadyExists = storeService.findByName(storeInputDTO.getName());
         if (storeAlreadyExists.isPresent()) {
             return getResponse("Store not allowed to be saved", FORBIDDEN);
         }
         
         storeService.save(newStore);
         
-        ResponseEntity<Object> responseEntity = new ResponseEntity<Object>(newStore,CREATED);
+        StoreOutputDTO storeOutputDTO = new StoreOutputDTO();
+        storeOutputDTO.setId(newStore.getId());
+        storeOutputDTO.setName(newStore.getName());
+        storeOutputDTO.setAddress(newStore.getAddress());
+        ResponseEntity<Object> responseEntity = new ResponseEntity<Object>(storeOutputDTO,CREATED);
         return responseEntity;
     }
    
@@ -184,7 +191,7 @@ public class StoreController {
     
     @PatchMapping(path= "/api/store/{store-id}")
     public ResponseEntity<Store> updateStore(@PathVariable(name="store-id")   Long       storeId,
-                                             @RequestBody                     StoreDTO   storeDTO){
+                                             @RequestBody                     StoreInputDTO   storeDTO){
       
         Store currentStore = null;
         try {

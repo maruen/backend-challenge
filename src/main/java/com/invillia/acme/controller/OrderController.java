@@ -14,7 +14,9 @@ import static org.springframework.http.ResponseEntity.status;
 
 import java.util.Optional;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -28,9 +30,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.invillia.acme.dto.OrderDTO;
-import com.invillia.acme.dto.OrderItemDTO;
+import com.invillia.acme.dto.input.OrderInputDTO;
+import com.invillia.acme.dto.input.OrderItemInputDTO;
 import com.invillia.acme.dto.output.DefaultOutputDTO;
+import com.invillia.acme.dto.output.ErrorDTO;
 import com.invillia.acme.dto.output.OrderOutputDTO;
 import com.invillia.acme.enums.OrderStatus;
 import com.invillia.acme.model.Order;
@@ -63,12 +66,43 @@ public class OrderController {
     @Autowired private OrderService     orderService;
     @Autowired private OrderItemService orderItemService;
     
+    
+    /** SAVE ORDER SWAGGER ANNOTATIONS **/
+    @POST
+    @Path("/api/order")
+    
+    @Produces({ APPLICATION_JSON })
+    @Consumes({ APPLICATION_JSON })
+    
+    @ApiOperation(  notes         = "Save order",
+                    response      = DefaultOutputDTO.class,
+                    produces      = APPLICATION_JSON,
+                    value         = EMPTY)
+   
+    @ApiResponses(
+            value = {
+          @ApiResponse(code       = 201,
+                       message    = "Order successfully saved",
+                       response   = DefaultOutputDTO.class),
+          
+          @ApiResponse(code       = 400,
+                      message     = "Bad request",
+                      response    = ErrorDTO.class),
+                              
+          @ApiResponse(code       = 404,
+                       message    = "Store not found",
+                       response   = ErrorDTO.class) 
+                    
+                            })
+    /** END SWAGGER ANNOTATIONS **/
+    
+    
    
     @PostMapping(path = "/api/order")
-    public ResponseEntity<Object> saveOrder(@RequestBody OrderDTO orderDTO) {
+    public ResponseEntity<Object> saveOrder(@RequestBody OrderInputDTO orderInputDTO) {
         
         
-        Optional<Long> storeId =  Optional.ofNullable(orderDTO.getStoreId());
+        Optional<Long> storeId =  Optional.ofNullable(orderInputDTO.getStoreId());
         if (!storeId.isPresent())  {
             return status(BAD_REQUEST).build();
         }
@@ -80,13 +114,13 @@ public class OrderController {
         }
         
         Order newOrder = new Order();
-        newOrder.setAddress(orderDTO.getAddress());
-        newOrder.setConfirmationDate(orderDTO.getConfirmationDate());
-        newOrder.setStatus(OrderStatus.valueOf(orderDTO.getStatus().toString()));
+        newOrder.setAddress(orderInputDTO.getAddress());
+        newOrder.setConfirmationDate(orderInputDTO.getConfirmationDate());
+        newOrder.setStatus(OrderStatus.valueOf(orderInputDTO.getStatus().toString()));
         newOrder.setStore(store.get());
         orderService.save(newOrder);
         
-        for (OrderItemDTO orderItemDTO : orderDTO.getItems() ) {
+        for (OrderItemInputDTO orderItemDTO : orderInputDTO.getItems() ) {
             
             OrderItem orderItem = new OrderItem();
             orderItem.setDescription(orderItemDTO.getDescription());
@@ -122,21 +156,19 @@ public class OrderController {
           @ApiResponse(code       = 404,
                       message     = "The order id was not found",
                       response    = String.class)
-          
-                    
                      })
+   
     /** END SWAGGER ANNOTATIONS **/
-    
     
     @GetMapping(path = "/api/order/getById/{order-id}")
     
     public ResponseEntity<Object> getOrderById(
             
             /** SWAGGER ANNOTATIONS **/
-            @ApiParam    (value = "The order Id"     , required = true)   
+            @ApiParam    (value = "Order Id"     , required = true)   
             @PathParam   (value = "order-id")             
             
-            @PathVariable(name  = "order-id"         , required = true) Long orderId )  {
+            @PathVariable(name  = "order-id"     , required = true) Long orderId )  {
         
         
         Optional<Order> order = orderService.findById(orderId);
