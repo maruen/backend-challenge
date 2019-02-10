@@ -28,6 +28,19 @@
             
         </createTable>
         
+        <addNotNullConstraint   
+            tableName                 =   "acme_store"
+            columnName                =   "name"
+            columnDataType            =   "VARCHAR(255)"
+            schemaName                =   "acme"
+        />
+         <addNotNullConstraint   
+            tableName                 =   "acme_store"
+            columnName                =   "address"
+            columnDataType            =   "VARCHAR(255)"
+            schemaName                =   "acme"
+        />
+        
         <!-- ************** ORDER TABLE DECLARATION BEGINING  ************** -->
         
         <createTable tableName    = "acme_order">
@@ -46,6 +59,32 @@
             <column name    =   "status"            type    =   "VARCHAR(255)  "/>
             
         </createTable>
+        
+        <addNotNullConstraint   
+            tableName                 =   "acme_order"
+            columnName                =   "store_id"
+            columnDataType            =   "BIGINT"
+            schemaName                =   "acme"
+        />
+        <addNotNullConstraint   
+            tableName                 =   "acme_order"
+            columnName                =   "address"
+            columnDataType            =   "VARCHAR(255)"
+            schemaName                =   "acme"
+        />
+        <addNotNullConstraint   
+            tableName                 =   "acme_order"
+            columnName                =   "confirmation_date"
+            columnDataType            =   "DATETIME"
+            schemaName                =   "acme"
+        />
+         <addNotNullConstraint   
+            tableName                 =   "acme_order"
+            columnName                =   "status"
+            columnDataType            =   "VARCHAR(255)"
+            schemaName                =   "acme"
+        />
+        
         
         <addForeignKeyConstraint 
             baseColumnNames         =   "store_id"
@@ -76,6 +115,31 @@
             
         </createTable>
         
+         <addNotNullConstraint   
+            tableName                 =   "acme_order_item"
+            columnName                =   "order_id"
+            columnDataType            =   "BIGINT"
+            schemaName                =   "acme"
+        />
+        <addNotNullConstraint   
+            tableName                 =   "acme_order_item"
+            columnName                =   "description"
+            columnDataType            =   "VARCHAR(255)"
+            schemaName                =   "acme"
+        />
+        <addNotNullConstraint   
+            tableName                 =   "acme_order_item"
+            columnName                =   "unit_price"
+            columnDataType            =   "FLOAT"
+            schemaName                =   "acme"
+        />
+         <addNotNullConstraint   
+            tableName                 =   "acme_order_item"
+            columnName                =   "quantity"
+            columnDataType            =   "INTEGER"
+            schemaName                =   "acme"
+        />
+        
         
          <addForeignKeyConstraint 
             baseColumnNames         =   "order_id"
@@ -100,12 +164,37 @@
                             primaryKeyName   =  "acme_payment_pk"/>
             </column>
         
-            <column name    =   "order_id"              type    =   "BIGINT        "/>
+            <column name    =   "order_id"              type    =   "BIGINT        "  />
             <column name    =   "status"                type    =   "VARCHAR(255)  "/>
-            <column name    =   "credit_card_number"    type    =   "INTEGER(16)   "/>
+            <column name    =   "credit_card_number"    type    =   "BIGINT        "/>
             <column name    =   "payment_date"          type    =   "DATETIME      "/>
             
         </createTable>
+        
+        <addNotNullConstraint   
+            tableName                 =   "acme_payment"
+            columnName                =   "order_id"
+            columnDataType            =   "BIGINT"
+            schemaName                =   "acme"
+        />
+        <addNotNullConstraint   
+            tableName                 =   "acme_payment"
+            columnName                =   "credit_card_number"
+            columnDataType            =   "BIGINT"
+            schemaName                =   "acme"
+        />
+        <addNotNullConstraint   
+            tableName                 =   "acme_payment"
+            columnName                =   "payment_date"
+            columnDataType            =   "DATETIME"
+            schemaName                =   "acme"
+        />
+        <addNotNullConstraint   
+            tableName                 =   "acme_payment"
+            columnName                =   "status"
+            columnDataType            =   "VARCHAR(255)"
+            schemaName                =   "acme"
+        />
         
         <addForeignKeyConstraint 
               baseColumnNames         =   "order_id"

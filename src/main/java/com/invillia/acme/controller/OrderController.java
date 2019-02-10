@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.invillia.acme.dto.OrderDTO;
 import com.invillia.acme.dto.OrderItemDTO;
+import com.invillia.acme.dto.output.DefaultOutputDTO;
 import com.invillia.acme.enums.OrderStatus;
 import com.invillia.acme.model.Order;
 import com.invillia.acme.model.OrderItem;
@@ -48,7 +49,7 @@ public class OrderController {
     
    
     @PostMapping(path = "/api/order")
-    public ResponseEntity<Order> saveOrder(@RequestBody OrderDTO orderDTO) {
+    public ResponseEntity<Object> saveOrder(@RequestBody OrderDTO orderDTO) {
         
         
         Optional<Long> storeId =  Optional.ofNullable(orderDTO.getStoreId());
@@ -62,12 +63,12 @@ public class OrderController {
             return status(NOT_FOUND).build();
         }
         
-        Order order = new Order();
-        order.setAddress(orderDTO.getAddress());
-        order.setConfirmationDate(orderDTO.getConfirmationDate());
-        order.setStatus(OrderStatus.valueOf(orderDTO.getStatus().toString()));
-        order.setStore(store.get());
-        orderService.save(order);
+        Order newOrder = new Order();
+        newOrder.setAddress(orderDTO.getAddress());
+        newOrder.setConfirmationDate(orderDTO.getConfirmationDate());
+        newOrder.setStatus(OrderStatus.valueOf(orderDTO.getStatus().toString()));
+        newOrder.setStore(store.get());
+        orderService.save(newOrder);
         
         for (OrderItemDTO orderItemDTO : orderDTO.getItems() ) {
             
@@ -75,14 +76,14 @@ public class OrderController {
             orderItem.setDescription(orderItemDTO.getDescription());
             orderItem.setQuantity(orderItemDTO.getQuantity());
             orderItem.setUnitPrice(orderItemDTO.getUnitPrice());
-            orderItem.setOrder(order);
+            orderItem.setOrder(newOrder);
             orderItemService.save(orderItem);
        
         }
         
-        ResponseEntity<Order> responseEntity = new ResponseEntity<Order>(order,CREATED);
+        DefaultOutputDTO defaultOutputDTO      = new DefaultOutputDTO(newOrder.getId());
+        ResponseEntity<Object> responseEntity  = new ResponseEntity<Object>(defaultOutputDTO,CREATED);
         return responseEntity;
-        
     }
 
    

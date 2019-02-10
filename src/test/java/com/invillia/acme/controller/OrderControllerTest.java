@@ -30,16 +30,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.invillia.acme.dto.OrderDTO;
 import com.invillia.acme.dto.OrderItemDTO;
-import com.invillia.acme.dto.input.PaymentInputDTO;
-import com.invillia.acme.enums.PaymentStatus;
 import com.invillia.acme.model.Order;
-import com.invillia.acme.model.Payment;
 import com.invillia.acme.model.Store;
 import com.invillia.acme.repositories.StoreRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class PaymentControllerTest {
+public class OrderControllerTest {
     
     MockMvc mockMvc;
     
@@ -47,35 +44,6 @@ public class PaymentControllerTest {
     "{"                                                                                 +
             "\"name\"               : \"%s\"    ,"                                      +
             "\"address\"            : \"%s\"    "                                       + 
-    "}";
-    
-    
-    String INSERT_ORDER_MESSAGE_PATTERN   =      
-    "{"                                                                                 +
-        "\"storeId\"                :   %n      ,"                                      +
-        "\"address\"                :  \"%s\"   ,"                                      +
-        "\"confirmationDate\"       :  \"%s\"   ,"                                      +
-        "\"status\"                 :  \"%s\"   ,"                                      +
-        "\"items\"                  :   [        "                                      +
-        "                                {       "                                      +
-        "                                    \"description\"      : \"%s\"  ,"          +
-        "                                    \"unitPrice\"        :  %n     ,"          +
-        "                                    \"quantity\"         :  %n      "          +
-        "                                },                                  "          +
-        "                                {                                   "          +
-        "                                    \"description\"      : \"%s\"  ,"          +
-        "                                    \"unitPrice\"        :  %n     ,"          +
-        "                                    \"quantity\"         :  %n     ,"          +
-        "                                }                                   "          +
-        "                               ]                                    "          +
-    "}";
-    
-    String INSERT_PAYMENT_MESSAGE_PATTERN   =      
-    "{"                                                                                 +
-        "\"orderId\"                : %n        ,"                                      +
-        "\"status\"                 : \"%s\"    ,"                                      +
-        "\"creditCardNumber\"       : %n        ,"                                      +
-        "\"paymentDate\"            : \"%s\"     "                                      +
     "}";
     
     
@@ -95,9 +63,6 @@ public class PaymentControllerTest {
     static final Float   UNIT_PRICE2              = 39.99F;
     static final Integer QUANTITY2                = 2;
     
-    
-    /** ORDER ITEM DATA **/
-    static final Long CREDIT_CARD_NUMBER          = 1234567890123456L;
     
    
     @Autowired
@@ -121,9 +86,8 @@ public class PaymentControllerTest {
     @Test
     public void testSucessfullSavePayment() {
 
-        ResponseEntity<Store>   response1 = null;
-        ResponseEntity<Order>   response2 = null;
-        ResponseEntity<Payment> response3 = null;
+        ResponseEntity<Store> response1 = null;
+        ResponseEntity<Order> response2 = null;
 
         try {
 
@@ -132,7 +96,6 @@ public class PaymentControllerTest {
              * STEP 1 - INSERT STORE
              * 
              */
-            
             
             HttpEntity<Object> store = getHttpEntity(format(INSERT_STORE_MESSAGE_PATTERN, 
                     USER_NAME,
@@ -187,26 +150,6 @@ public class PaymentControllerTest {
             
             assertEquals(CREATED,response2.getStatusCode());
             assertNotNull(response2.getBody().getId());
-            
-            
-            /**
-             * 
-             * STEP 3 - INSERT PAYMENT
-             * 
-             */
-            
-             PaymentInputDTO paymentInputDTO = new PaymentInputDTO();
-             paymentInputDTO.setCreditCardNumber(CREDIT_CARD_NUMBER);
-             paymentInputDTO.setOrderId(response2.getBody().getId());
-             paymentInputDTO.setPaymentDate(LocalDateTime.now());
-             paymentInputDTO.setStatus(PaymentStatus.PENDING);
-             
-             HttpEntity<Object> payment = getHttpEntity(paymentInputDTO);
-             response3 = template.postForEntity("/api/payment", payment, Payment.class);
-             
-             assertEquals(CREATED,response3.getStatusCode());
-             assertNotNull(response3.getBody().getId());
-            
    
 
         } catch (Exception e) {
@@ -220,27 +163,23 @@ public class PaymentControllerTest {
              **/
          
             storeRepository.deleteById(response1.getBody().getId());
+          
             
         }
     }
     
     
-    
-    //@Test
-    //TODO
-    public void testUnsuccessfullSavePayment() {
+    // @Test
+    // TODO
+    public void testUnsuccessfullSaveOrder() {
 
-        //ResponseEntity<Store> response1 = null;
-     
         try {
 
         } catch (Exception e) {
 
             fail(e.getMessage());
 
-        } finally  {
-            // cleanup the store
-            //storeRepository.deleteById(response1.getBody().getId());
+        } finally {
         }
     }
     
