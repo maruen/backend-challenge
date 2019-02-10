@@ -18,8 +18,7 @@ import com.invillia.acme.repositories.OrderRepository;
 @Service
 public class OrderServiceImpl implements OrderService {
 
-  @Autowired
-  OrderRepository orderRepository;
+  @Autowired OrderRepository orderRepository;
   
   
   @Override

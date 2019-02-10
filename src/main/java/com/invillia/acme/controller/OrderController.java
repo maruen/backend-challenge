@@ -92,8 +92,7 @@ public class OrderController {
           @ApiResponse(code       = 404,
                        message    = "Store not found",
                        response   = ErrorDTO.class) 
-                    
-                            })
+                    })
     /** END SWAGGER ANNOTATIONS **/
     
     
@@ -155,7 +154,7 @@ public class OrderController {
           
           @ApiResponse(code       = 404,
                       message     = "The order id was not found",
-                      response    = String.class)
+                      response    = ErrorDTO.class)
                      })
    
     /** END SWAGGER ANNOTATIONS **/
@@ -180,8 +179,8 @@ public class OrderController {
             orderOutputDTO.setAddress(order.get().getAddress());
             orderOutputDTO.setConfirmationDate(String.valueOf(order.get().getConfirmationDate()));
             orderOutputDTO.setStoreId(order.get().getStore().getId());
-            orderOutputDTO.setStatus(String.valueOf(order.get().getStatus()))
-            ;
+            orderOutputDTO.setStatus(String.valueOf(order.get().getStatus()));
+           
             ResponseEntity<Object> responseEntity = new ResponseEntity<Object>(orderOutputDTO,OK);
             return responseEntity;
         }
@@ -189,9 +188,6 @@ public class OrderController {
         return getResponse("The order id was not found", NOT_FOUND);
     }
     
-    
-
-   
-    
+       
     
 }

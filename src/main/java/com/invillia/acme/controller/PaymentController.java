@@ -49,11 +49,8 @@ import io.swagger.annotations.ApiResponses;
 @RestController
 public class PaymentController {
     
-    @Autowired
-    private OrderService orderService;
-    
-    @Autowired
-    private PaymentService paymentService;
+    @Autowired private OrderService     orderService;
+    @Autowired private PaymentService   paymentService;
     
     
     

@@ -18,8 +18,7 @@ import com.invillia.acme.repositories.PaymentRepository;
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
-  @Autowired
-  PaymentRepository paymentRepository;
+  @Autowired PaymentRepository paymentRepository;
   
   
   @Override

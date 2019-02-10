@@ -6,6 +6,7 @@ package com.invillia.acme.controller;
 import static com.invillia.acme.utils.ResponseUtils.getResponse;
 import static com.invillia.acme.utils.ValidationUtils.validateAddress;
 import static com.invillia.acme.utils.ValidationUtils.validateName;
+import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.apache.commons.lang.StringUtils.EMPTY;
@@ -13,6 +14,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.ResponseEntity.status;
 
 import java.util.List;
@@ -23,9 +25,11 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,10 +45,10 @@ import com.invillia.acme.dto.output.ErrorDTO;
 import com.invillia.acme.dto.output.StoreOutputDTO;
 import com.invillia.acme.model.Store;
 import com.invillia.acme.services.StoreService;
-import com.invillia.acme.utils.ValidationUtils;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
@@ -61,8 +65,11 @@ import io.swagger.annotations.ApiResponses;
 @RestController
 public class StoreController {
 
-    @Autowired
-    private StoreService storeService;
+    @Autowired private StoreService storeService;
+    
+    
+    
+    
     
     
     /** GET STORES SWAGGER ANNOTATIONS **/
@@ -77,18 +84,22 @@ public class StoreController {
                     value       = EMPTY)
    
     @ApiResponses(
-            value         = { @ApiResponse(code       = 200,
-                                           message    = "Successfully retrieved stores",
-                                           response   = java.util.List.class) 
-                            })
+            value   = { @ApiResponse(code       = 200,
+                                     message    = "Successfully retrieved stores",
+                                     response   = java.util.List.class) 
+                      })
     /** END SWAGGER ANNOTATIONS **/
-
     
     @GetMapping(path = "/api/store")
     public ResponseEntity<List<Store>> getStores() {
         return ResponseEntity.ok(storeService.getAll());
     }
 
+    
+    
+    
+    
+    
     
     
     /** SAVE STORE SWAGGER ANNOTATIONS **/
@@ -162,50 +173,175 @@ public class StoreController {
         ResponseEntity<Object> responseEntity = new ResponseEntity<Object>(storeOutputDTO,CREATED);
         return responseEntity;
     }
+    
+    
+    
+    
+    
+    
+    
+    /** GET STORE BY ID SWAGGER ANNOTATIONS **/
+    @GET
+    @Path("/api/store/getById/{store-id}}")
+    @Produces({ APPLICATION_JSON })
+    
+    @ApiOperation(  notes         = "Get store by id",
+                    response      = StoreOutputDTO.class,
+                    produces      = APPLICATION_JSON,
+                    value         = EMPTY)
    
+    @ApiResponses(
+            value = {
+          @ApiResponse(code       = 200,
+                       message    = "Returns the store",
+                       response   = StoreOutputDTO.class),
+          
+          @ApiResponse(code       = 404,
+                      message     = "The store id was not found",
+                      response    = ErrorDTO.class)
+                     })
+   
+    /** END SWAGGER ANNOTATIONS **/
 
     @GetMapping(path = "/api/store/getById/{store-id}")
-    public ResponseEntity<Store> getStoreById(@PathVariable(name = "store-id", required = true) Long storeId) {
+    public ResponseEntity<Object> getStoreById(
+            
+            /** SWAGGER ANNOTATIONS **/
+            @ApiParam    (value = "Store Id"     , required = true)   
+            @PathParam   (value = "store-id")             
+            
+            @PathVariable(name  = "store-id"     , required = true) Long storeId )  {
+     
         
         Optional<Store> store = storeService.findById(storeId);
         if (store.isPresent()) {
-            return ResponseEntity.ok(store.get());
+            
+            StoreOutputDTO storeOutputDTO = new StoreOutputDTO();
+
+            storeOutputDTO.setId(store.get().getId());
+            storeOutputDTO.setName(store.get().getName());
+            storeOutputDTO.setAddress(store.get().getAddress());
+            
+            ResponseEntity<Object> responseEntity = new ResponseEntity<Object>(storeOutputDTO,OK);
+            return responseEntity;
         }
-        return ResponseEntity.notFound().build();
+        
+        return getResponse(format("The store id %n was not found",storeId), NOT_FOUND);
     }
+    
+    
+    
+    
+    
+    
+    
+    /** GET STORE BY NAME SWAGGER ANNOTATIONS **/
+    @GET
+    @Path("/api/store/getByName/{store-name}}")
+    @Produces({ APPLICATION_JSON })
+    
+    @ApiOperation(  notes         = "Get store by name",
+                    response      = StoreOutputDTO.class,
+                    produces      = APPLICATION_JSON,
+                    value         = EMPTY)
+   
+    @ApiResponses(
+            value = {
+          @ApiResponse(code       = 200,
+                       message    = "Returns the store",
+                       response   = StoreOutputDTO.class),
+          
+          @ApiResponse(code       = 404,
+                      message     = "The store name was not found",
+                      response    = ErrorDTO.class)
+                     })
+   
+    /** END SWAGGER ANNOTATIONS **/
     
     
     @GetMapping(path = "/api/store/getByName/{store-name}")
-    public ResponseEntity<Store> getStoreByName(@PathVariable(name = "store-name", required = true) String name) {
+    public ResponseEntity<Object> getStoreByName(
+            
+            /** SWAGGER ANNOTATIONS **/
+            @ApiParam    (value = "Store name"     , required = true)   
+            @PathParam   (value = "store-name")             
+            
+            @PathVariable(name  = "store-name"     , required = true) String storeName )  {
         
-        name = name.replaceAll("\\s+", " ").toUpperCase();
+        storeName = storeName.replaceAll("\\s+", " ").toUpperCase();
         
-        Optional<Store> store = storeService.findByName(name);
+        Optional<Store> store = storeService.findByName(storeName);
         if (store.isPresent()) {
-            return ResponseEntity.ok(store.get());
+            
+            StoreOutputDTO storeOutputDTO = new StoreOutputDTO();
+
+            storeOutputDTO.setId(store.get().getId());
+            storeOutputDTO.setName(store.get().getName());
+            storeOutputDTO.setAddress(store.get().getAddress());
+            
+            ResponseEntity<Object> responseEntity = new ResponseEntity<Object>(storeOutputDTO,OK);
+            return responseEntity;
         }
-        return ResponseEntity.notFound().build();
+        
+        return getResponse(format("The store name %s was not found",storeName), NOT_FOUND);
     }
+    
+    
+    
+    
+    
+    
+    
+    /** GET STORE BY NAME SWAGGER ANNOTATIONS **/
+    @POST
+    @Path("/api/store/{store-id}")
+    @Produces({ APPLICATION_JSON })
+    
+    @ApiOperation(  notes         = "Updates store by id",
+                    response      = StoreOutputDTO.class,
+                    produces      = APPLICATION_JSON,
+                    value         = EMPTY)
+   
+    @ApiResponses(
+            value = {
+          @ApiResponse(code       = 200,
+                       message    = "The store was updated sucessfully",
+                       response   = StoreOutputDTO.class),
+          
+          @ApiResponse(code       = 404,
+                      message     = "The store was not found",
+                      response    = ErrorDTO.class)
+                     })
+   
+    /** END SWAGGER ANNOTATIONS **/
     
     
     
     @PatchMapping(path= "/api/store/{store-id}")
-    public ResponseEntity<Store> updateStore(@PathVariable(name="store-id")   Long       storeId,
-                                             @RequestBody                     StoreInputDTO   storeDTO){
+    public ResponseEntity<Object> updateStore(
+            
+          
+            @ApiParam     (value    = "Store id" , required = true)   
+            @PathParam    (value    = "store-id")     
+            @PathVariable (name     = "store-id" ) Long  storeId,
+         
+            @ApiParam(value = "StoreDTO"  , required = true) 
+            @RequestBody StoreInputDTO   storeDTO){
       
+        
         Store currentStore = null;
         try {
             currentStore = storeService.findById(storeId).get();
         } catch (NoSuchElementException e) {
-            return ResponseEntity.status(NOT_FOUND).build();
+            return getResponse(format("The store id %n was not found",storeId), NOT_FOUND);
         }
-        
+       
         
         Optional<String> newName =  Optional.ofNullable(storeDTO.getName());
         if (newName.isPresent()) {
             
-            if (!ValidationUtils.validateName(newName.get())) {
-                return status(BAD_REQUEST).build();
+            if (!validateName(newName.get())) {
+                return getResponse("Invalid Name", BAD_REQUEST);
             }
          
             String newNameWithProperSpacing = newName.get().replaceAll("\\s+", " ");
@@ -213,7 +349,7 @@ public class StoreController {
      
                 Optional<Store> storeAlreadyExists = storeService.findByName(newNameWithProperSpacing);
                 if (storeAlreadyExists.isPresent()) {
-                    return status(FORBIDDEN).build();
+                    return getResponse("Not allowed to update to this name", FORBIDDEN);
                 }
             }
         
@@ -223,8 +359,8 @@ public class StoreController {
         Optional<String> newAddress =  Optional.ofNullable(storeDTO.getAddress());
         if (newAddress.isPresent()) {
             
-            if (!ValidationUtils.validateAddress(newAddress.get())) {
-                return status(BAD_REQUEST).build();
+            if (!validateAddress(newAddress.get())) {
+                return getResponse("Invalid Address", BAD_REQUEST);
             }
          
             String newAddressWithProperSpacing = newAddress.get().replaceAll("\\s+", " ");
@@ -233,7 +369,12 @@ public class StoreController {
         
         
         storeService.save(currentStore);
-        return ResponseEntity.ok().body(currentStore);
+        StoreOutputDTO storeOutputDTO = new StoreOutputDTO();
+        storeOutputDTO.setId(currentStore.getId());
+        storeOutputDTO.setName(currentStore.getName());
+        storeOutputDTO.setAddress(currentStore.getAddress());
+        ResponseEntity<Object> responseEntity = new ResponseEntity<Object>(storeOutputDTO,OK);
+        return responseEntity;
     }
     
     

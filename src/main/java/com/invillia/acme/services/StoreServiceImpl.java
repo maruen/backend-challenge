@@ -18,8 +18,7 @@ import com.invillia.acme.repositories.StoreRepository;
 @Service
 public class StoreServiceImpl implements StoreService {
 
-  @Autowired
-  StoreRepository storeRepository;
+  @Autowired StoreRepository storeRepository;
   
   
   @Override
