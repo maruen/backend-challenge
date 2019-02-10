@@ -29,7 +29,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +39,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.invillia.acme.dto.input.StoreInputDTO;
-import com.invillia.acme.dto.output.DefaultOutputDTO;
 import com.invillia.acme.dto.output.ErrorDTO;
 import com.invillia.acme.dto.output.StoreOutputDTO;
 import com.invillia.acme.model.Store;
@@ -110,7 +108,7 @@ public class StoreController {
     @Consumes({ APPLICATION_JSON })
     
     @ApiOperation(  notes         = "Save store",
-                    response      = DefaultOutputDTO.class,
+                    response      = StoreOutputDTO.class,
                     produces      = APPLICATION_JSON,
                     value         = EMPTY)
    
@@ -118,7 +116,7 @@ public class StoreController {
             value = {
           @ApiResponse(code       = 201,
                        message    = "Store successfully saved",
-                       response   = DefaultOutputDTO.class),
+                       response   = StoreOutputDTO.class),
                               
           @ApiResponse(code       = 403,
                        message    = "Store already saved",

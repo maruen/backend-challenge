@@ -26,6 +26,50 @@
   } ],
   "schemes" : [ "http" ],
   "paths" : {
+    "/api/order" : {
+      "post" : {
+        "tags" : [ "Order Services" ],
+        "summary" : "",
+        "description" : "Save order",
+        "operationId" : "saveOrder",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/OrderInputDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/DefaultOutputDTO"
+            }
+          },
+          "201" : {
+            "description" : "Order successfully saved",
+            "schema" : {
+              "$ref" : "#/definitions/DefaultOutputDTO"
+            }
+          },
+          "400" : {
+            "description" : "Bad request",
+            "schema" : {
+              "$ref" : "#/definitions/ErrorDTO"
+            }
+          },
+          "404" : {
+            "description" : "Store not found",
+            "schema" : {
+              "$ref" : "#/definitions/ErrorDTO"
+            }
+          }
+        }
+      }
+    },
     "/api/order/getById/{order-id}" : {
       "get" : {
         "tags" : [ "Order Services" ],
@@ -36,7 +80,7 @@
         "parameters" : [ {
           "name" : "order-id",
           "in" : "path",
-          "description" : "The order Id",
+          "description" : "Order Id",
           "required" : true,
           "type" : "integer",
           "format" : "int64"
@@ -49,7 +93,10 @@
             }
           },
           "404" : {
-            "description" : "The order id was not found"
+            "description" : "The order id was not found",
+            "schema" : {
+              "$ref" : "#/definitions/ErrorDTO"
+            }
           }
         }
       }
@@ -117,24 +164,124 @@
           "name" : "body",
           "required" : false,
           "schema" : {
-            "$ref" : "#/definitions/StoreDTO"
+            "$ref" : "#/definitions/StoreInputDTO"
           }
         } ],
         "responses" : {
           "200" : {
             "description" : "successful operation",
             "schema" : {
-              "$ref" : "#/definitions/Store"
+              "$ref" : "#/definitions/DefaultOutputDTO"
             }
           },
           "201" : {
             "description" : "Store successfully saved",
             "schema" : {
-              "$ref" : "#/definitions/Store"
+              "$ref" : "#/definitions/DefaultOutputDTO"
             }
           },
           "403" : {
             "description" : "Store already saved",
+            "schema" : {
+              "$ref" : "#/definitions/ErrorDTO"
+            }
+          }
+        }
+      }
+    },
+    "/api/store/getById/{store-id}}" : {
+      "get" : {
+        "tags" : [ "Store Services" ],
+        "summary" : "",
+        "description" : "Get store by id",
+        "operationId" : "getStoreById",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "store-id",
+          "in" : "path",
+          "description" : "Store Id",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Returns the store",
+            "schema" : {
+              "$ref" : "#/definitions/StoreOutputDTO"
+            }
+          },
+          "404" : {
+            "description" : "The store id was not found",
+            "schema" : {
+              "$ref" : "#/definitions/ErrorDTO"
+            }
+          }
+        }
+      }
+    },
+    "/api/store/getByName/{store-name}}" : {
+      "get" : {
+        "tags" : [ "Store Services" ],
+        "summary" : "",
+        "description" : "Get store by name",
+        "operationId" : "getStoreByName",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "store-name",
+          "in" : "path",
+          "description" : "Store name",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Returns the store",
+            "schema" : {
+              "$ref" : "#/definitions/StoreOutputDTO"
+            }
+          },
+          "404" : {
+            "description" : "The store name was not found",
+            "schema" : {
+              "$ref" : "#/definitions/ErrorDTO"
+            }
+          }
+        }
+      }
+    },
+    "/api/store/{store-id}" : {
+      "post" : {
+        "tags" : [ "Store Services" ],
+        "summary" : "",
+        "description" : "Updates store by id",
+        "operationId" : "updateStore",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "store-id",
+          "in" : "path",
+          "description" : "Store id",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "StoreDTO",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/StoreInputDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The store was updated sucessfully",
+            "schema" : {
+              "$ref" : "#/definitions/StoreOutputDTO"
+            }
+          },
+          "404" : {
+            "description" : "The store was not found",
             "schema" : {
               "$ref" : "#/definitions/ErrorDTO"
             }
@@ -158,6 +305,52 @@
       "properties" : {
         "error" : {
           "type" : "string"
+        }
+      }
+    },
+    "OrderInputDTO" : {
+      "type" : "object",
+      "properties" : {
+        "storeId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "address" : {
+          "type" : "string"
+        },
+        "confirmationDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "status" : {
+          "type" : "string",
+          "enum" : [ "PENDING", "AWAITING_PAYMENT", "AWAITING_FULFILLMENT", "AWAITING_SHIPMENT", "AWAITING_PICKUP", "PARTIALLY_SHIPPED", "COMPLETED", "SHIPPED", "CANCELLED", "DECLINED", "REFUNDED", "DISPUTED", "MANUAL_VERIFICACTION_REQUIRED", "PARTIALLY_REFUNDED" ]
+        },
+        "orderId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "items" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/OrderItemInputDTO"
+          }
+        }
+      }
+    },
+    "OrderItemInputDTO" : {
+      "type" : "object",
+      "properties" : {
+        "description" : {
+          "type" : "string"
+        },
+        "unitPrice" : {
+          "type" : "number",
+          "format" : "float"
+        },
+        "quantity" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
@@ -204,13 +397,9 @@
         }
       }
     },
-    "Store" : {
+    "StoreInputDTO" : {
       "type" : "object",
       "properties" : {
-        "id" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
         "name" : {
           "type" : "string"
         },
@@ -219,9 +408,13 @@
         }
       }
     },
-    "StoreDTO" : {
+    "StoreOutputDTO" : {
       "type" : "object",
       "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
         "name" : {
           "type" : "string"
         },

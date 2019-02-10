@@ -26,4 +26,5 @@
 bin/
 
 ## dist folder for generation of swagger.json
- docs/swagger-docker/dist/target/
+swagger-docker/dist/target/
+swagger-docker/dist/src/
