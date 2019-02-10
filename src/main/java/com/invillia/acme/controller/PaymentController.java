@@ -67,12 +67,9 @@ public class PaymentController {
                     value         = EMPTY)
    
     @ApiResponses(
-            value = {
-          @ApiResponse(code       = 201,
-                       message    = "Payment successfully saved",
-                       response   = DefaultOutputDTO.class)
-                    
-                     })
+          value = {
+          @ApiResponse(code = 201, message = "Payment successfully saved", response   = DefaultOutputDTO.class)
+          })
     /** END SWAGGER ANNOTATIONS **/
     
     

@@ -80,19 +80,11 @@ public class OrderController {
                     value         = EMPTY)
    
     @ApiResponses(
-            value = {
-          @ApiResponse(code       = 201,
-                       message    = "Order successfully saved",
-                       response   = DefaultOutputDTO.class),
-          
-          @ApiResponse(code       = 400,
-                      message     = "Bad request",
-                      response    = ErrorDTO.class),
-                              
-          @ApiResponse(code       = 404,
-                       message    = "Store not found",
-                       response   = ErrorDTO.class) 
-                    })
+          value = {
+          @ApiResponse(code  = 201, message  = "Order successfully saved", response  = DefaultOutputDTO.class),
+          @ApiResponse(code  = 400, message  = "Bad request",              response  = ErrorDTO.class),
+          @ApiResponse(code  = 404, message  = "Store not found",          response  = ErrorDTO.class) 
+    })
     /** END SWAGGER ANNOTATIONS **/
     
     
@@ -147,16 +139,10 @@ public class OrderController {
                     value         = EMPTY)
    
     @ApiResponses(
-            value = {
-          @ApiResponse(code       = 200,
-                       message    = "Returns the order",
-                       response   = OrderOutputDTO.class),
-          
-          @ApiResponse(code       = 404,
-                      message     = "The order id was not found",
-                      response    = ErrorDTO.class)
-                     })
-   
+          value = {
+          @ApiResponse(code  = 200, message  = "Returns the order",          response  = OrderOutputDTO.class),
+          @ApiResponse(code  = 404, message  = "The order id was not found", response  = ErrorDTO.class)
+    })
     /** END SWAGGER ANNOTATIONS **/
     
     @GetMapping(path = "/api/order/getById/{order-id}")

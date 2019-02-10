@@ -77,14 +77,12 @@ public class StoreController {
     @Produces({ APPLICATION_JSON })
     
     @ApiOperation(  notes       = "Returns all stores",
-                    response    = java.util.List.class,
+                    response    = List.class,
                     produces    = APPLICATION_JSON,
                     value       = EMPTY)
    
     @ApiResponses(
-            value   = { @ApiResponse(code       = 200,
-                                     message    = "Successfully retrieved stores",
-                                     response   = java.util.List.class) 
+            value   = { @ApiResponse(code  = 200, message  = "Successfully retrieved stores", response = List.class) 
                       })
     /** END SWAGGER ANNOTATIONS **/
     
@@ -112,16 +110,11 @@ public class StoreController {
                     produces      = APPLICATION_JSON,
                     value         = EMPTY)
    
-    @ApiResponses(
-            value = {
-          @ApiResponse(code       = 201,
-                       message    = "Store successfully saved",
-                       response   = StoreOutputDTO.class),
-                              
-          @ApiResponse(code       = 403,
-                       message    = "Store already saved",
-                       response   = ErrorDTO.class) 
-                    })
+    @ApiResponses( value = {
+          @ApiResponse(code   = 201, message    = "Store successfully saved", response = StoreOutputDTO.class),
+          @ApiResponse(code   = 403, message    = "Store already saved",      response = ErrorDTO.class) 
+    })
+    
     /** END SWAGGER ANNOTATIONS **/
     
     
@@ -183,21 +176,16 @@ public class StoreController {
     @Path("/api/store/getById/{store-id}}")
     @Produces({ APPLICATION_JSON })
     
-    @ApiOperation(  notes         = "Get store by id",
+    @ApiOperation(  notes         = "Gets the store by id",
                     response      = StoreOutputDTO.class,
                     produces      = APPLICATION_JSON,
                     value         = EMPTY)
    
     @ApiResponses(
-            value = {
-          @ApiResponse(code       = 200,
-                       message    = "Returns the store",
-                       response   = StoreOutputDTO.class),
-          
-          @ApiResponse(code       = 404,
-                      message     = "The store id was not found",
-                      response    = ErrorDTO.class)
-                     })
+          value = {
+          @ApiResponse(code  = 200,  message  = "Returns the store",            response   = StoreOutputDTO.class),
+          @ApiResponse(code  = 404,  message  = "The store id was not found",   response   = ErrorDTO.class)
+    })
    
     /** END SWAGGER ANNOTATIONS **/
 
@@ -238,21 +226,16 @@ public class StoreController {
     @Path("/api/store/getByName/{store-name}}")
     @Produces({ APPLICATION_JSON })
     
-    @ApiOperation(  notes         = "Get store by name",
+    @ApiOperation(  notes         = "Gets the store by name",
                     response      = StoreOutputDTO.class,
                     produces      = APPLICATION_JSON,
                     value         = EMPTY)
    
     @ApiResponses(
-            value = {
-          @ApiResponse(code       = 200,
-                       message    = "Returns the store",
-                       response   = StoreOutputDTO.class),
-          
-          @ApiResponse(code       = 404,
-                      message     = "The store name was not found",
-                      response    = ErrorDTO.class)
-                     })
+          value = {
+          @ApiResponse(code  = 200, message  = "Returns the store",            response   = StoreOutputDTO.class),
+          @ApiResponse(code  = 404, message  = "The store name was not found", response   = ErrorDTO.class)
+          })
    
     /** END SWAGGER ANNOTATIONS **/
     
@@ -295,21 +278,16 @@ public class StoreController {
     @Path("/api/store/{store-id}")
     @Produces({ APPLICATION_JSON })
     
-    @ApiOperation(  notes         = "Updates store by id",
+    @ApiOperation(  notes         = "Updates the store by id",
                     response      = StoreOutputDTO.class,
                     produces      = APPLICATION_JSON,
                     value         = EMPTY)
    
     @ApiResponses(
-            value = {
-          @ApiResponse(code       = 200,
-                       message    = "The store was updated sucessfully",
-                       response   = StoreOutputDTO.class),
-          
-          @ApiResponse(code       = 404,
-                      message     = "The store was not found",
-                      response    = ErrorDTO.class)
-                     })
+          value = {
+          @ApiResponse(code = 200, message  = "The store was updated sucessfully", response   = StoreOutputDTO.class),
+          @ApiResponse(code = 404, message  = "The store was not found",           response    = ErrorDTO.class)
+          })
    
     /** END SWAGGER ANNOTATIONS **/
     
