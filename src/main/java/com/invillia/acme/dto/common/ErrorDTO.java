@@ -1,4 +1,4 @@
-package com.invillia.acme.dto.output;
+package com.invillia.acme.dto.common;
 
 public class ErrorDTO {
 

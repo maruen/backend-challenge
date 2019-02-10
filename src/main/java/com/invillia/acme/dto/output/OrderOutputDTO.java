@@ -1,5 +1,7 @@
 package com.invillia.acme.dto.output;
 
+import java.util.List;
+
 /**
  * @author Maruen Mehana <maruen@gmail.com>
  *
@@ -9,11 +11,12 @@ public class OrderOutputDTO {
     
     public OrderOutputDTO() {}
     
-    public Long     id;
-    public Long     storeId;
-    public String   address;
-    public String   confirmationDate;
-    public String   status;
+    public Long                       id;
+    public Long                       storeId;
+    public String                     address;
+    public String                     confirmationDate;
+    public String                     status;
+    public List<OrderItemOutputDTO>   items;
     
     public Long getId() {
         return id;
@@ -45,18 +48,24 @@ public class OrderOutputDTO {
     public void setStatus(String status) {
         this.status = status;
     }
-    
+    public List<OrderItemOutputDTO> getItems() {
+        return items;
+    }
+    public void setItems(List<OrderItemOutputDTO> items) {
+        this.items = items;
+    }
     @Override
     public String toString() {
-        return String.format("OrderOutputDTO [id=%s, storeId=%s, address=%s, confirmationDate=%s, status=%s]",
+        return String.format("OrderOutputDTO [id=%s, storeId=%s, address=%s, confirmationDate=%s, status=%s, items=%s]",
                 id,
                 storeId,
                 address,
                 confirmationDate,
-                status);
+                status,
+                items);
     }
     
     
-   
+    
     
 }

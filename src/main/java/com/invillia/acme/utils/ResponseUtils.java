@@ -3,7 +3,7 @@ package com.invillia.acme.utils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.invillia.acme.dto.output.ErrorDTO;
+import com.invillia.acme.dto.common.ErrorDTO;
 
 public class ResponseUtils {
 

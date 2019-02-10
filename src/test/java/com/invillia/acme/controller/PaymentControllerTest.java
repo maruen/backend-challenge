@@ -31,8 +31,8 @@ import com.invillia.acme.dto.input.OrderInputDTO;
 import com.invillia.acme.dto.input.OrderItemInputDTO;
 import com.invillia.acme.dto.input.PaymentInputDTO;
 import com.invillia.acme.dto.input.StoreInputDTO;
-import com.invillia.acme.dto.output.DefaultOutputDTO;
 import com.invillia.acme.dto.output.OrderOutputDTO;
+import com.invillia.acme.dto.output.PaymentOutputDTO;
 import com.invillia.acme.dto.output.StoreOutputDTO;
 import com.invillia.acme.enums.PaymentStatus;
 import com.invillia.acme.model.Store;
@@ -81,7 +81,7 @@ public class PaymentControllerTest {
 
         ResponseEntity<StoreOutputDTO>      response1 = null;
         ResponseEntity<OrderOutputDTO>      response2 = null;
-        ResponseEntity<DefaultOutputDTO>    response3 = null;
+        ResponseEntity<PaymentOutputDTO>    response3 = null;
 
         try {
 
@@ -90,12 +90,11 @@ public class PaymentControllerTest {
              * STEP 1 - INSERT STORE
              * 
              */
-
-
+            
             StoreInputDTO storeInputDTO1 = new StoreInputDTO();
             storeInputDTO1.setName(USER_NAME);
             storeInputDTO1.setAddress(USER_ADDRESS);
-
+            
 
             HttpEntity<Object> entityToPost = getHttpEntity(storeInputDTO1);
             response1 = template.postForEntity("/api/store", entityToPost, StoreOutputDTO.class);
@@ -161,7 +160,7 @@ public class PaymentControllerTest {
             paymentInputDTO.setStatus(PaymentStatus.PENDING);
 
             entityToPost = getHttpEntity(paymentInputDTO);
-            response3 = template.postForEntity("/api/payment", entityToPost, DefaultOutputDTO.class);
+            response3 = template.postForEntity("/api/payment", entityToPost, PaymentOutputDTO.class);
 
             assertEquals(CREATED,response3.getStatusCode());
             assertNotNull(response3.getBody().getId());

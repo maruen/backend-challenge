@@ -14,8 +14,9 @@ public interface PaymentService {
   
   public List<Payment> getAll();
   
-  public Payment             save        (Payment    payment);
-  public Optional<Payment>   findById    (Long       id);
+  public Payment             save           (Payment    payment);
+  public Optional<Payment>   findById       (Long       id);
+  public Optional<Payment>   findByOrderId  (Long       orderId);
   
   
 }

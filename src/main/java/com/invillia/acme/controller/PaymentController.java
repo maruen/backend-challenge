@@ -4,6 +4,7 @@
 package com.invillia.acme.controller;
 
 import static com.invillia.acme.utils.ResponseUtils.getResponse;
+import static java.util.Optional.ofNullable;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.invillia.acme.dto.input.PaymentInputDTO;
-import com.invillia.acme.dto.output.DefaultOutputDTO;
+import com.invillia.acme.dto.output.PaymentOutputDTO;
 import com.invillia.acme.model.Order;
 import com.invillia.acme.model.Payment;
 import com.invillia.acme.services.OrderService;
@@ -62,13 +63,13 @@ public class PaymentController {
     @Consumes({ APPLICATION_JSON })
     
     @ApiOperation(  notes         = "Save payment",
-                    response      = DefaultOutputDTO.class,
+                    response      = PaymentOutputDTO.class,
                     produces      = APPLICATION_JSON,
                     value         = EMPTY)
    
     @ApiResponses(
           value = {
-          @ApiResponse(code = 201, message = "Payment successfully saved", response   = DefaultOutputDTO.class)
+          @ApiResponse(code = 201, message = "Payment successfully saved", response = PaymentOutputDTO.class)
           })
     /** END SWAGGER ANNOTATIONS **/
     
@@ -82,13 +83,13 @@ public class PaymentController {
                                 BAD_REQUEST);
         }
         
-        Optional<Long> orderId =  Optional.ofNullable(paymentInputDTO.getOrderId());
+        Optional<Long> orderId =  ofNullable(paymentInputDTO.getOrderId());
         if (!orderId.isPresent())  {
             return getResponse("Order id is empty or null",
                                 BAD_REQUEST);
         }
         
-        Optional<Long> creditCardNumber =  Optional.ofNullable(paymentInputDTO.getCreditCardNumber());
+        Optional<Long> creditCardNumber =  ofNullable(paymentInputDTO.getCreditCardNumber());
         if (!creditCardNumber.isPresent())  {
             return getResponse("Credit card number is empty or null",
                                BAD_REQUEST);
@@ -115,8 +116,14 @@ public class PaymentController {
         
         paymentService.save(newPayment);
         
-        DefaultOutputDTO defaultOutputDTO     = new DefaultOutputDTO(newPayment.getId());
-        ResponseEntity<Object> responseEntity = new ResponseEntity<Object>(defaultOutputDTO,CREATED);
+        PaymentOutputDTO paymentOutputDTO = new PaymentOutputDTO();
+        paymentOutputDTO.setId(newPayment.getId());
+        paymentOutputDTO.setCreditCardNumber(newPayment.getCreditCardNumber());
+        paymentOutputDTO.setOrderId(newPayment.getOrder().getId());
+        paymentOutputDTO.setPaymentDate(newPayment.getPaymentDate());
+        paymentOutputDTO.setStatus(newPayment.getStatus());
+        
+        ResponseEntity<Object> responseEntity = new ResponseEntity<Object>(paymentOutputDTO,CREATED);
         return responseEntity;
     }
     

@@ -37,8 +37,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.invillia.acme.dto.common.ErrorDTO;
 import com.invillia.acme.dto.input.StoreInputDTO;
-import com.invillia.acme.dto.output.ErrorDTO;
 import com.invillia.acme.dto.output.StoreOutputDTO;
 import com.invillia.acme.model.Store;
 import com.invillia.acme.services.StoreService;
@@ -312,7 +312,7 @@ public class StoreController {
         }
        
         
-        Optional<String> newName =  Optional.ofNullable(storeDTO.getName());
+        Optional<String> newName =  ofNullable(storeDTO.getName());
         if (newName.isPresent()) {
             
             if (!validateName(newName.get())) {
@@ -331,7 +331,7 @@ public class StoreController {
             currentStore.setName(newNameWithProperSpacing.toUpperCase());
         }
         
-        Optional<String> newAddress =  Optional.ofNullable(storeDTO.getAddress());
+        Optional<String> newAddress =  ofNullable(storeDTO.getAddress());
         if (newAddress.isPresent()) {
             
             if (!validateAddress(newAddress.get())) {

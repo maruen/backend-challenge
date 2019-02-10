@@ -1,4 +1,4 @@
-package com.invillia.acme.dto.input;
+package com.invillia.acme.dto.output;
 
 import java.time.LocalDateTime;
 
@@ -9,15 +9,23 @@ import com.invillia.acme.enums.PaymentStatus;
  *
  */
 
-public class PaymentInputDTO {
+public class PaymentOutputDTO {
     
-    public PaymentInputDTO() {}
+    public PaymentOutputDTO() {}
 
+    
+    public Long                 id;
     public Long                 orderId;
     public PaymentStatus        status;
     public Long                 creditCardNumber;
     public LocalDateTime        paymentDate;
     
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
     public Long getOrderId() {
         return orderId;
     }
@@ -42,15 +50,14 @@ public class PaymentInputDTO {
     public void setPaymentDate(LocalDateTime paymentDate) {
         this.paymentDate = paymentDate;
     }
-    
     @Override
     public String toString() {
-        return String.format("PaymentInputDTO [orderId=%s, status=%s, creditCardNumber=%s, paymentDate=%s]",
+        return String.format("PaymentOutputDTO [id=%s, orderId=%s, status=%s, creditCardNumber=%s, paymentDate=%s]",
+                id,
                 orderId,
                 status,
                 creditCardNumber,
                 paymentDate);
     }
-    
     
 }

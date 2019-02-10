@@ -26,7 +26,6 @@ public class PaymentServiceImpl implements PaymentService {
     List<Payment> paymentList = new ArrayList<>();
     paymentRepository.findAll().forEach(paymentList::add);
     return paymentList;
-    
   }
   
   public Payment save(Payment payment) {
@@ -39,5 +38,10 @@ public class PaymentServiceImpl implements PaymentService {
     return payment;
   }
 
+  @Override
+  public Optional<Payment> findByOrderId(Long orderId) {
+      Optional<Payment> payment = paymentRepository.findByOrderId(orderId);
+      return payment;
+  }
   
 }

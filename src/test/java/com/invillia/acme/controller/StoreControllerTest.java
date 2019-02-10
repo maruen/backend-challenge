@@ -129,7 +129,16 @@ public class StoreControllerTest {
             HttpEntity<Object> entityToPost = getHttpEntity(storeInputDTO1);
             response1 = template.postForEntity("/api/store", entityToPost, StoreOutputDTO.class);
 
-            assertEquals(CREATED  , response1.getStatusCode());
+            if (response1.getStatusCode().equals(FORBIDDEN)) {
+
+                Optional<Store> existingStore = storeRepository.findByName(USER1_NAME);
+                if (existingStore.isPresent()) {
+                    storeRepository.deleteById(existingStore.get().getId());
+                }
+                response1 = template.postForEntity("/api/store", entityToPost, StoreOutputDTO.class);
+            }
+
+            assertEquals(CREATED , response1.getStatusCode());
             assertNotNull(response1.getBody().getId());
             
             /**
@@ -199,15 +208,24 @@ public class StoreControllerTest {
              * 
              */
             
-            StoreInputDTO storeDTO1 = new StoreInputDTO();
-            storeDTO1.setName(USER1_NAME);
-            storeDTO1.setAddress(USER1_ADDRESS);
+            StoreInputDTO storeInputDTO1 = new StoreInputDTO();
+            storeInputDTO1.setName(USER1_NAME);
+            storeInputDTO1.setAddress(USER1_ADDRESS);
             
 
-            HttpEntity<Object> entityToPost = getHttpEntity(storeDTO1);
+            HttpEntity<Object> entityToPost = getHttpEntity(storeInputDTO1);
             response1 = template.postForEntity("/api/store", entityToPost, StoreOutputDTO.class);
 
-            assertEquals(CREATED  , response1.getStatusCode());
+            if (response1.getStatusCode().equals(FORBIDDEN)) {
+
+                Optional<Store> existingStore = storeRepository.findByName(USER1_NAME);
+                if (existingStore.isPresent()) {
+                    storeRepository.deleteById(existingStore.get().getId());
+                }
+                response1 = template.postForEntity("/api/store", entityToPost, StoreOutputDTO.class);
+            }
+
+            assertEquals(CREATED , response1.getStatusCode());
             assertNotNull(response1.getBody().getId());
     
             /**
@@ -253,15 +271,24 @@ public class StoreControllerTest {
              * 
              */
             
-            StoreInputDTO storeDTO1 = new StoreInputDTO();
-            storeDTO1.setName(USER1_NAME);
-            storeDTO1.setAddress(USER1_ADDRESS);
+            StoreInputDTO storeInputDTO1 = new StoreInputDTO();
+            storeInputDTO1.setName(USER1_NAME);
+            storeInputDTO1.setAddress(USER1_ADDRESS);
             
 
-            HttpEntity<Object> entityToPost = getHttpEntity(storeDTO1);
+            HttpEntity<Object> entityToPost = getHttpEntity(storeInputDTO1);
             response1 = template.postForEntity("/api/store", entityToPost, StoreOutputDTO.class);
 
-            assertEquals(CREATED  , response1.getStatusCode());
+            if (response1.getStatusCode().equals(FORBIDDEN)) {
+
+                Optional<Store> existingStore = storeRepository.findByName(USER1_NAME);
+                if (existingStore.isPresent()) {
+                    storeRepository.deleteById(existingStore.get().getId());
+                }
+                response1 = template.postForEntity("/api/store", entityToPost, StoreOutputDTO.class);
+            }
+
+            assertEquals(CREATED , response1.getStatusCode());
             assertNotNull(response1.getBody().getId());
     
             /**
@@ -304,15 +331,24 @@ public class StoreControllerTest {
              * 
              */
             
-            StoreInputDTO storeDTO1 = new StoreInputDTO();
-            storeDTO1.setName(USER1_NAME);
-            storeDTO1.setAddress(USER1_ADDRESS);
+            StoreInputDTO storeInputDTO1 = new StoreInputDTO();
+            storeInputDTO1.setName(USER1_NAME);
+            storeInputDTO1.setAddress(USER1_ADDRESS);
             
 
-            HttpEntity<Object> entityToPost = getHttpEntity(storeDTO1);
+            HttpEntity<Object> entityToPost = getHttpEntity(storeInputDTO1);
             response1 = template.postForEntity("/api/store", entityToPost, StoreOutputDTO.class);
 
-            assertEquals(CREATED  , response1.getStatusCode());
+            if (response1.getStatusCode().equals(FORBIDDEN)) {
+
+                Optional<Store> existingStore = storeRepository.findByName(USER1_NAME);
+                if (existingStore.isPresent()) {
+                    storeRepository.deleteById(existingStore.get().getId());
+                }
+                response1 = template.postForEntity("/api/store", entityToPost, StoreOutputDTO.class);
+            }
+
+            assertEquals(CREATED , response1.getStatusCode());
             assertNotNull(response1.getBody().getId());
             
             /**
