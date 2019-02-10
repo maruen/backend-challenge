@@ -24,3 +24,6 @@
 /nbdist/
 /.nb-gradle/
 bin/
+
+## dist folder for generation of swagger.json
+ docs/swagger-docker/dist/target/
