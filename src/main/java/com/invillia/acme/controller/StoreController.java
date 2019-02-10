@@ -32,7 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -273,7 +272,7 @@ public class StoreController {
     
     
     
-    /** GET STORE BY NAME SWAGGER ANNOTATIONS **/
+    /** UPDATES THE STORE SWAGGER ANNOTATIONS **/
     @POST
     @Path("/api/store/{store-id}")
     @Produces({ APPLICATION_JSON })
@@ -293,7 +292,7 @@ public class StoreController {
     
     
     
-    @PatchMapping(path= "/api/store/{store-id}")
+    @PostMapping(path= "/api/store/{store-id}")
     public ResponseEntity<Object> updateStore(
             
           
@@ -309,7 +308,7 @@ public class StoreController {
         try {
             currentStore = storeService.findById(storeId).get();
         } catch (NoSuchElementException e) {
-            return getResponse(format("The store id %n was not found",storeId), NOT_FOUND);
+            return getResponse(format("The store id %s was not found",String.valueOf(storeId)), NOT_FOUND);
         }
        
         

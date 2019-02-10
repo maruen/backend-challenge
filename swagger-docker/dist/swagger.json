@@ -193,7 +193,7 @@
       "get" : {
         "tags" : [ "Store Services" ],
         "summary" : "",
-        "description" : "Get store by id",
+        "description" : "Gets the store by id",
         "operationId" : "getStoreById",
         "produces" : [ "application/json" ],
         "parameters" : [ {
@@ -224,7 +224,7 @@
       "get" : {
         "tags" : [ "Store Services" ],
         "summary" : "",
-        "description" : "Get store by name",
+        "description" : "Gets the store by name",
         "operationId" : "getStoreByName",
         "produces" : [ "application/json" ],
         "parameters" : [ {
@@ -254,7 +254,7 @@
       "post" : {
         "tags" : [ "Store Services" ],
         "summary" : "",
-        "description" : "Updates store by id",
+        "description" : "Updates the store by id",
         "operationId" : "updateStore",
         "produces" : [ "application/json" ],
         "parameters" : [ {
